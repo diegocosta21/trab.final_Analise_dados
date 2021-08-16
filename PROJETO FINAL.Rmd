@@ -44,31 +44,42 @@ base%>%
   kable_styling(latex_options = "hold_position", position = "center")%>%
   kable_minimal()
 ```
+##APREENSÃO DE ARMAS DE FOGO COMO FATOR DE REDUÇÃO DOS HOMICIDIOS
 
-## Taxa de homicípio por uf 
+###RESUMO
 
-```{r}
-ggplot(base, aes(x=reorder(UF,Tx_homic_2019),Tx_homic_2019, fill=Tx_homic_2019))+
-  geom_col()+
-  geom_hline(yintercept = mean(base$Tx_homic_2019), color="red", size=1)+
-  geom_text(aes(label = format(Tx_homic_2019, digits=3)), 
-            vjust = .3, hjust = -0.1, size = 5,
-            position = position_dodge(width = 1),
-            color="black")+
-  labs(title="Taxa de homicídio por UF (100 mil hab.)",
-       x="",y="", fill="", colour="")+
-  coord_flip()+
-  theme_bw()+
-  theme(title = element_text(size = 16, colour = "black", face="bold"),
-        axis.text = element_text(size = 16, colour = "black"),
-        legend.text = element_text(size=13, color = "black"),
-        strip.text = element_text(size = 12),
-        legend.position = "none")
+####Este trabalho analisa as taxas de homicídio com as taxas de apreensão de armas e o IDH, no Brasil, para o ano de 2019. Metodologicamente, combinamos simulação básica, estatística descritiva, análise espacial e um modelo de regressão de mínimos quadrados ordinários para analisar os dados do Anuário Brasileiro de Segurança Pública 2020 e o Atlas de Desenvolvimento Humano no Brasil. Os resultados demonstraram que o IDH possui maior influência na determinação da taxa de homicídios, enquanto a apreensão de armas obteve resultados não significativos. Apesar disso, a variável sugere influenciar na redução dos indicadores. Sendo assim, ainda não se pode rejeitá-la em modelos preditivos. Possivelmente com o aumento do n amostral, em novos estudos, será possível isolar melhor o papel dessa variável na redução dos homicídios. 
 
-```
+###1. INTRODUÇÃO
+
+####Em 2018, após seis anos de aumentos sucessivos nas taxas de homicídios, o Brasil obteve em dois anos uma redução de 25,5% no número de mortes. Segundo o Anuário Brasileiro de Segurança Pública (2020), as armas de fogo são os principais instrumentos para a perpetração desse crime, responsáveis por cerca de 70% dos homicídios. 
+
+####Dentre os fatores que podem influenciar no combate aos homicídios está a predominância de armamentos em uma sociedade. Cerqueira e De Mello (2012) e Cooter e Ulen (2010), por meio da análise de vários estudos, identificaram que há uma relação de causalidade entre armas de fogo e crimes violentos que só pode ser evidenciada empiricamente. Em suas análises, perceberam que alguns trabalhos encontram uma relação positiva entre armas e crimes violentos, com destaque para os homicídios, enquanto outros encontram uma relação negativa entre a difusão de armas e a prática de homicídios e crimes violentos.
+
+####Lott Jr. (2009), por sua vez, menciona 18 trabalhos que encontram uma relação negativa entre armas e crimes violentos. Em outros doze estudos reportados pelo autor, não se encontra uma relação estatisticamente significativa entre a difusão de armas e crimes violentos. 
+
+####Já para Moody (2010), os muitos trabalhos que encontraram uma relação positiva entre armas e homicídios não realizaram um teste de causalidade e quando o teste é feito encontra-se uma causalidade reversa: são os assassinatos que acarretam a proliferação das armas.
+
+####Apesar dos estudos mencionados demonstrarem opiniões diversas entre a causalidade da predominância de armas como fator determinante para a criminalidade, é importante frisar que a grande maioria cita exemplos dos Estados Unidos, país com grande quantidade de armas legalizadas. No caso Brasileiro, há considerável quantidade de armas ilegais estão fora do radar de fiscalização do estado e podem ser consideradas como de alto potencial para o uso em práticas delituosas. Sendo assim, identificar a taxa de apreensão dessas armas pode ser uma ferramenta de avaliação da redução de homicídios, além de servir como variável proxy para identificar a eficiência das polícias no combate aos crimes letais intencionais.
+
+####Sendo assim, esse trabalho tem como objetivo identificar a influência da taxa de apreensões de armas como variável indicadora da redução dos homicídios e seu uso como variável proxy para a mensurar a eficiência das polícias.
+
+###METODOLOGIA
+
+####Essa seção descreve a metodologia do trabalho com o objetivo de maximizar a replicabilidade dos resultados observados (KING, 1995). A população de interesse são as 27 unidades federativas do Brasil. 
+
+####Como variável dependente, foi escolhida a taxa de homicídio de 2019. Como variáveis independentes foram escolhidas a taxa de apreensão de armas, também de 2019 e o IDH de 2017. O ano das variáveis foram escolhidas segundo a disponibilidade de dados mais recentes e consolidados.  
+
+####Os dados foram coletados a partir do Anuário Brasileiro de Segurança Pública 2020 e do site do Programa das Nações Unidas para o Desenvolvimento (PNUD), por meio do Atlas de Desenvolvimento Humano no Brasil. 
+
+####O desenho de pesquisa combina simulação básica, estatística descritiva, análise espacial e um modelo de regressão de mínimos quadrados ordinários. Todas as análises foram realizadas através do RStudio (versão 1.4.1106). Os dados e códigos desenvolvidos estão disponibilizados por meio do GitHub, no endereço https://github.com/diegocosta21/trab.final_Analise_dados.git. 
 
 
-## Taxa de homicídio por região
+###RESULTADOS E DISCUSSÕES
+
+####Ao analisar descritivamente os dados podemos observar que a região norte possuí a maior taxa de homicídios, com 34,5 por 100 mil, seguida pelo Nordeste (30,7), Centro-Oeste (22,7), Sudeste (20,8) e Sul (16,2). Figueiredo Filho et. Al (2015), avaliou a série história entre 2000 e 2010 e o Nordeste despontava como a região mais violenta. Entretanto, já era possível observar um alto crescimento dos homicídios no Norte. 
+
+## Gráfico 1. Taxa de homicídio por região.
 
 ```{r}
 base%>%
@@ -91,22 +102,25 @@ base%>%
         legend.position = "none")
 
 ```
+####No gráfico 2, ao desmembramos os dados por estados, percebe-se que doze estados possuem taxas de homicídio acima da média. Cinco deles são da região Norte: Amapá (54,51), Pará (40,65), Roraima (36,15), Acre (33,56) e Amazonas (28,28), e cinco são da região Nordeste: Sergipe (42,07), Bahia (40,35), Rio Grande do Norte (36,04), Pernambuco (35,70) e Alagoas (32,81).
 
-## Apreensão de arma por uf
+####Como destaque temos o Amapá, que apresenta uma taxa de homicídios 34% maior que o segundo colocado (Sergipe) e 513% maior que São Paulo (8,88) que possui a menor taxa.
+
+##Gráfico 2 - Taxa de homicípio por UF. 
 
 ```{r}
-ggplot(base, aes(x=reorder(UF,Tx_Apr_arm_2019),Tx_Apr_arm_2019, fill=Tx_Apr_arm_2019))+
+ggplot(base, aes(x=reorder(UF,Tx_homic_2019),Tx_homic_2019, fill=Tx_homic_2019))+
   geom_col()+
-  geom_hline(yintercept = mean(base$Tx_Apr_arm_2019), color="red", size=1)+
-  geom_text(aes(label = format(Tx_Apr_arm_2019, digits=3)), 
+  geom_hline(yintercept = mean(base$Tx_homic_2019), color="red", size=1)+
+  geom_text(aes(label = format(Tx_homic_2019, digits=3)), 
             vjust = .3, hjust = -0.1, size = 5,
             position = position_dodge(width = 1),
             color="black")+
-  labs(title="Taxa de apreensão de arma por UF (100 mil hab.)", 
+  labs(title="Taxa de homicídio por UF (100 mil hab.)",
        x="",y="", fill="", colour="")+
   coord_flip()+
   theme_bw()+
-  theme(title = element_text(size = 16, colour = "black", face="bold", hjust = .5),
+  theme(title = element_text(size = 16, colour = "black", face="bold"),
         axis.text = element_text(size = 16, colour = "black"),
         legend.text = element_text(size=13, color = "black"),
         strip.text = element_text(size = 12),
@@ -114,8 +128,10 @@ ggplot(base, aes(x=reorder(UF,Tx_Apr_arm_2019),Tx_Apr_arm_2019, fill=Tx_Apr_arm_
 
 ```
 
+####Comparativamente, ao analisarmos as taxas de apreensão de armas por região, temos que o Sudeste apresenta maiores taxas (69,4), seguido pelo Norte (61,6), Centro-Oeste (55,4), Sul (52,4) e Nordeste (47,5).
 
-## Apreensão de arma por região
+
+##Gráfico 3 - Apreensão de armas de fogo, por região.
 
 ```{r}
 base%>%
@@ -139,22 +155,26 @@ base%>%
 
 ```
 
+####Quando avaliado por estados, Rondônia (117,8) e Minas Gerais (115,1) se destacam, com taxas bem superiores aos outros entes da federação. Em oposição, temos Piauí (17,5) e Rio Grande do Norte (24,2) destacam-se negativamente. 
 
-## IDH por uf
+####São Paulo também apresenta baixa taxa de apreensão de armas (28,0). Em relação ao estado mais rico do país, diversos autores apontaram as variadas políticas públicas adotadas, principalmente na primeira década dos anos 2000, a fim de reduzir a quantidade de armas legais e ilegais, tendo maior intensidade após o Estatuto do Desarmamento, em 2003. Alguns estudos estimaram que a diminuição de 1% no estoque de armas reduziria entre 0,15% e 0,20% a taxa de homicídio em São Paulo (HARTUNG, 2009; FELIX, 2003; CERQUEIRA e DE MELLO, 2012; PERES 2004). 
+
+
+##Gráfico 4 - Apreensão de armas de fogo, por uf.
 
 ```{r}
-ggplot(base, aes(x=reorder(UF,IDH_2017),IDH_2017, fill=IDH_2017))+
+ggplot(base, aes(x=reorder(UF,Tx_Apr_arm_2019),Tx_Apr_arm_2019, fill=Tx_Apr_arm_2019))+
   geom_col()+
-  geom_hline(yintercept = mean(base$IDH_2017), color="red", size=1)+
-  geom_text(aes(label = format(IDH_2017, digits=3)), 
+  geom_hline(yintercept = mean(base$Tx_Apr_arm_2019), color="red", size=1)+
+  geom_text(aes(label = format(Tx_Apr_arm_2019, digits=3)), 
             vjust = .3, hjust = -0.1, size = 5,
             position = position_dodge(width = 1),
             color="black")+
-  labs(title="IDH por UF",
+  labs(title="Taxa de apreensão de arma por UF (100 mil hab.)", 
        x="",y="", fill="", colour="")+
   coord_flip()+
   theme_bw()+
-  theme(title = element_text(size = 16, colour = "black", face="bold"),
+  theme(title = element_text(size = 16, colour = "black", face="bold", hjust = .5),
         axis.text = element_text(size = 16, colour = "black"),
         legend.text = element_text(size=13, color = "black"),
         strip.text = element_text(size = 12),
@@ -162,7 +182,12 @@ ggplot(base, aes(x=reorder(UF,IDH_2017),IDH_2017, fill=IDH_2017))+
 
 ```
 
-## IDH por região
+####Em relação ao IDH, o Nordeste ocupa a último lugar (0,719) e o Sudeste a primeira posição (0,795), seguido de perto pelo Centro-Oeste (0,764). Distrito Federal (0,850) e São Paulo (0,826) são os estados com melhor Índice de Desenvolvimento Humano, enquanto o Maranhão (0,687) e Alagoas (0,683) são os piores do país. 
+
+####Apesar disso, os estados com menores IDH não apresentam as piores taxas de homicídio. O Maranhão, inclusive, figura entre as dez melhores taxas de homicídio. Contrariando, em certa medida, as predições de Dijk (2012), que entendia que os crimes violentos contra a pessoa são “poverty driven” e diminuem com a redução da pobreza, enquanto os crimes contra a propriedade são em grande parte “opportunity driven” e aumentam com o decréscimo da pobreza
+
+
+##Gráfico 5 -  IDH por região.
 
 ```{r}
 base%>%
@@ -186,7 +211,31 @@ base%>%
 
 ```
 
-## Correlação homicidio x arma
+##Gráfico 6 - IDH por UF.
+
+```{r}
+ggplot(base, aes(x=reorder(UF,IDH_2017),IDH_2017, fill=IDH_2017))+
+  geom_col()+
+  geom_hline(yintercept = mean(base$IDH_2017), color="red", size=1)+
+  geom_text(aes(label = format(IDH_2017, digits=3)), 
+            vjust = .3, hjust = -0.1, size = 5,
+            position = position_dodge(width = 1),
+            color="black")+
+  labs(title="IDH por UF",
+       x="",y="", fill="", colour="")+
+  coord_flip()+
+  theme_bw()+
+  theme(title = element_text(size = 16, colour = "black", face="bold"),
+        axis.text = element_text(size = 16, colour = "black"),
+        legend.text = element_text(size=13, color = "black"),
+        strip.text = element_text(size = 12),
+        legend.position = "none")
+
+```
+
+####Nos gráficos de correlação relacionando taxa de homicídio com taxa de apreensão de armas, taxa de homicídios com IDH e taxa de apreensão de armas e IDH, podemos verificar melhor a distribuição dos dadis em relação as variáveis.  
+
+##Gráfico 7 - Correlação: taxa de homicídio x Taxa de apreensão de armas.
 
 ```{r}
 ggplot(base, aes(Tx_Apr_arm_2019, Tx_homic_2019, label=UF))+
@@ -206,7 +255,7 @@ ggplot(base, aes(Tx_Apr_arm_2019, Tx_homic_2019, label=UF))+
 
 ```
 
-## Correlação homicidio x idh
+##Gráfico 8 - Correlação: taxa de homicídio x IDH.
 
 ```{r}
 ggplot(base, aes(IDH_2017, Tx_homic_2019, label=UF))+
@@ -226,7 +275,7 @@ ggplot(base, aes(IDH_2017, Tx_homic_2019, label=UF))+
 
 ```
 
-## Correlação arma x idh
+###Gráfico 9 - Correlação: Taxa de apreensão de armas x IDH.
 
 ```{r}
 ggplot(base, aes(IDH_2017, Tx_Apr_arm_2019, label=UF))+
@@ -246,7 +295,9 @@ ggplot(base, aes(IDH_2017, Tx_Apr_arm_2019, label=UF))+
 
 ```
 
-## Diferença percentual homicidios
+####Em termos históricos, ao comparamos as taxas de homicídio de 2019 com a de 2009, podemos verificar nos extremos o grande aumento do Amapá (79,78%) e redução convincente dos homicídios no Distrito Federal (-54,81%). Merecem destaque ainda Pernambuco e Alagoas que apesar de figurarem entre os estados mais violentos, conseguiram diminuir suas mortes violentas nos últimos dez anos em -20,63% e -44,72%, respectivamente. 
+
+##Gráfico 10 - Diferença percentual da taxas de homicidios das UFs, entre 2009 e 2019.
 
 ```{r}
 base2<-read_excel("Dados_Homicidios_Armas.xlsx", sheet = 2)
@@ -271,7 +322,7 @@ ggplot(base2, aes(x=reorder(UF,dif),dif, fill=dif))+
 
 ```
 
-## Mapas
+##Gráfico 11 - Distribuição espacial das Taxas de Homicídio, Apreensão de Armas e IDH. 
 ```{r message=FALSE, warning=FALSE}
 br_shape <- st_read("UFEBRASIL.shp", stringsAsFactors = F)
 
@@ -296,6 +347,12 @@ tm_basemap("OpenStreetMap")+
 
 
 ```
+####Ao testarmos o modelo de regressão verificarmos uma interação fraca entre a taxa de homicídio e a taxa de apreensão de armas, fato observado no gráfico de efeito e no resultado do modelo, onde o p-valor não foi significativo e alinhado com o observado por Moody (2010), ao considerar as taxas de apreensão como variável proxy para predominância de armas e que não têm efeito significativo sobre
+os homicídios.
+
+####Contudo, apesar do p-valor alto, o beta obteve valor negativo, como esperado (FELIX, 2013; JORGE 2020). Possivelmente, se os dados forem desagregados por município e obtermos um n maior e, talvez, um p-valor significativo em relação a influência da taxa de apreensão de armas. 
+
+####Diferentemente, o IDH demonstrou maior influência para a taxa de homicídio. 
 
 ## Modelo
 ```{r message=FALSE, warning=FALSE}
@@ -330,7 +387,7 @@ effect_plot(model, pred = Tx_Apr_arm_2019, interval = TRUE, plot.points = TRUE)
 plot_summs(model)
 
 ```
-
+####Quando realizado os testes para verificar os pressupostos da regressão linear, verificamos várias inconsistências nos dados. O aumento do n poderia trazer melhoras ao modelo. Além disso, o uso de uma variável como o IDH, também pode ter sido responsável por trazer algum viés ao modelo.
 ### Resíduos
 ```{r message=FALSE, warning=FALSE}
 par(mfrow = c(2, 3))
@@ -342,3 +399,37 @@ plot(model,5)
 plot(model,6)
 
 ```
+####Como resultado, podemos identificar que apesar da taxa de apreensão de armas de fogo ser utilizada como uma variável proxy para medir a disponibilidade de armas de fogo, e para estimar a redução de homicídios, em nossas análises se mostrou insipiente. Em parte pelo peso do IDH no modelo e em parte pela baixa quantidade de dados. 
+
+####Apesar disso, não se pode descartar seu potencial. A vantagem dessa variável é sua disponibilidade anual, possibilitando a construção de séries temporais. Porém, possui a desvantagem de depender da eficiência / produtividade e do grau de prioridade atribuído pela polícia de cada localidade, que podem variar ao longo do tempo e entre estados e regiões. 
+
+####Sendo assim, no futuro seria interessante aprofundar os estudos desse indicador, por meio de dados desagregados, analisando os municípios ao longo do tempo.  
+
+
+###REFERÊNCIAS BIBLIOGRÁFICAS
+
+####CERQUEIRA, Daniel. R. e DE MELLO, João M. P. (2012) Menos Armas, Menos Crimes. Brasília, IPEA - Texto para Discussão n. 1721.
+
+####COOTER, Robert e ULEN, Thomas. (2010). Direito & Economia. 5ª. ed. Porto Alegre, Bookman.
+
+####DIJK, J. V. Determinants of crime. Crime and criminal justice systems in Europe and North America. European Institute for Crime Prevention and Control, 2012.
+
+####FELIX, Sueli Andruccioli. Armas versus vidas: análise de regressão sobre o impacto da apreensão de armas nos homicídios. Revista LEVS, n. 11, 2013.
+
+####FIGUEIREDO FILHO, Dalson Britto et al. “Foi de morte matada”: Homicídios no Brasil em perspectiva comparada. Sistema Penal & Violência, v. 7, n. 1, p. 6-17, 2015.
+
+####HARTUNG, Gabriel Chequer. Ensaios em demografia e criminalidade. 2009. Tese de Doutorado.
+
+####KING, Gary. Replication, replication. Ps: Political Science and Politics, v. 28, p.443-499, 1995.
+
+####JORGE, Marco Antonio. Uma Análise da Mensuração da Disponibilidade de Armas de Fogo no Brasil. Economic Analysis of Law Review, v. 11, n. 2, p. 97-125, 2020.
+
+####LOTT JR., John. (2009), Freedomnomics. São Paulo, Saraiva.
+
+####MOODY, Carlisle. (2010) “Firearms and Homicide”. in B. BENSON e P. ZIMMERMAN (ed.). Handbook on the Economics of Crime. Cheltenham, Edward Elgar.
+
+####PERES, Maria Fernanda T. (coord). (2004), Firearm-Related Violence in Brazil. São Paulo, Núcleo
+de Estudos da Violência / Universidade de São Paulo.
+
+####PÚBLICA, ANUÁRIO BRASILEIRO DE SEGURANÇA. São Paulo: Fórum Brasileiro de Segurança Pública, Ano 13, 2019. 2020.
+
