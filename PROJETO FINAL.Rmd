@@ -1,7 +1,7 @@
 ---
 title: "PROJETO FINAL"
 author: "Diego Leonel Costa"
-output: rmarkdown::github_document
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
